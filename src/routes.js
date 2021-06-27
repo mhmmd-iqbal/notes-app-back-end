@@ -6,6 +6,16 @@ const {
 	deleteNoteByIdHandler,
 } = require("./handler");
 
+const {
+	addBookHandler,
+	getAllBooksHandler,
+	getBookByIdHandler,
+	editBookByIdHandler,
+	deletedBookByIdHandler,
+} = require("./bookHandler");
+
+const Joi = require("joi");
+
 const routes = [
 	{
 		method: "POST",
@@ -31,6 +41,68 @@ const routes = [
 		method: "DELETE",
 		path: "/notes/{id}",
 		handler: deleteNoteByIdHandler,
+	},
+	{
+		method: "POST",
+		path: "/books",
+		handler: addBookHandler,
+		options: {
+			validate: {
+				payload: Joi.object({
+					name: Joi.string(),
+					year: Joi.number().integer(),
+					author: Joi.string(),
+					summary: Joi.string(),
+					publisher: Joi.string(),
+					pageCount: Joi.number().integer(),
+					readPage: Joi.number().integer(),
+					reading: Joi.boolean(),
+				}),
+			},
+		},
+	},
+	{
+		method: "GET",
+		path: "/books",
+		handler: getAllBooksHandler,
+		options: {
+			validate: {
+				query: Joi.object({
+					name: Joi.string(),
+					reading: Joi.number().integer().min(0).max(1),
+					finished: Joi.number().integer().min(0).max(1),
+				}),
+			},
+		},
+	},
+	{
+		method: "GET",
+		path: "/books/{id}",
+		handler: getBookByIdHandler,
+	},
+	{
+		method: "PUT",
+		path: "/books/{id}",
+		handler: editBookByIdHandler,
+		options: {
+			validate: {
+				payload: Joi.object({
+					name: Joi.string(),
+					year: Joi.number().integer(),
+					author: Joi.string(),
+					summary: Joi.string(),
+					publisher: Joi.string(),
+					pageCount: Joi.number().integer(),
+					readPage: Joi.number().integer(),
+					reading: Joi.boolean(),
+				}),
+			},
+		},
+	},
+	{
+		method: "DELETE",
+		path: "/books/{id}",
+		handler: deletedBookByIdHandler,
 	},
 ];
 
